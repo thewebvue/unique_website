@@ -4,184 +4,254 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Man Behind The Name — Manikandan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
-    <!-- Updated to link to the exact CSS file you requested -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="couple_unique.css">
 </head>
 <body>
 
+    <!-- FILM GRAIN TEXTURE -->
+    <div id="grainOverlay"></div>
+
+    <!-- OPENING SEQUENCE -->
+    <div id="openingIntro">
+        <p class="intro-eyebrow">Every story starts somewhere.</p>
+        <div class="intro-count" id="introCount">5</div>
+        <div class="clapperboard">
+            <div class="clapper-top"></div>
+            <div class="clapper-body">
+                <p>SCENE — A Story Begins</p>
+                <p>DIRECTOR — Life Itself</p>
+                <p>BASED ON THE FEELING OF — Abhiyum Naanum</p>
+                <h4>TAKE 01: MANIKANDAN</h4>
+            </div>
+        </div>
+    </div>
+    <div class="clap-flash" id="clapFlash"></div>
+
     <nav>
         <div class="logo">M.</div>
-        <div class="nav-links">
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="navLinks">
             <a href="#home">Home</a>
             <a href="#world">His World</a>
             <a href="#people">His People</a>
-            <a href="#game">The Game</a>
+            <a href="#game">Screen Test</a>
+            <a href="#puzzle">Puzzle</a>
             <a href="#future" class="btn-special">A Special Day ♡</a>
         </div>
     </nav>
 
+    <!-- ACT ONE — HOME -->
     <section id="home">
         <div class="hero-content">
             <div class="hero-text">
-                <p class="script-text">Hey! This is</p>
+                <span class="chapter-tag">Reel One — Where It Begins</span>
                 <h1 class="highlight">Manikandan</h1>
-                <p class="script-text" style="color: var(--text-charcoal);">A Tamil pesum Mumbai paiyan ♡</p>
-                <ul>
+                <p class="role-line">A Tamil-pesum Mumbai paiyan ♡</p>
+
+                <p class="intro-narration">
+                    Sometimes a story doesn't need a grand stage — just a quiet walk,
+                    a bit of Ooty mist, and someone willing to listen. This one starts
+                    the same way. Andheri mornings. Chennai in the heart. A story
+                    still finding its next scene.
+                </p>
+
+                <ul class="credits-list">
                     <li>CA Aspirant.</li>
                     <li>Future Auditor.</li>
                     <li>A Dreamer Filmmaker.</li>
                     <li>A Son. A Brother. A Friend.</li>
                     <li>A Story still being written...</li>
                 </ul>
-                <p class="script-text" style="margin-top: 20px;">"From Andheri... with a Tamil Heart"</p>
+                <p class="script-text">"From Andheri... with a Tamil Heart"</p>
             </div>
 
             <div class="hero-image">
-                <!-- Change "surya_img.jpeg" to your downloaded hero image name if needed -->
-                <img src="surya_img.jpeg" alt="Manikandan">
-            </div>
-            
-            <div class="signpost">
-                <div class="sign">MUMBAI</div>
-                <div class="sign">CHENNAI</div>
-                <div class="sign">CINEMA</div>
-                <div class="sign">CA</div>
-                <div class="sign">PEACE</div>
+                <div class="film-still">
+                    <span class="take-tag">TAKE 01</span>
+                    <!-- Change "surya_img.jpeg" to your downloaded hero image name if needed -->
+                    <img src="surya_img.jpeg" alt="Manikandan">
+                    <span class="still-caption">Manikandan ♡</span>
+                </div>
             </div>
         </div>
 
-        <!-- UPDATED: All web URLs replaced with local src filenames -->
-        <div class="polaroid-gallery">
-            <div class="polaroid" onclick="openModal('Ayappan_img.jpg', 'Fav God — Iyyappa ♡')">
-                <div class="polaroid-cover">
-                    <!-- Replace 'iyyappa_image.jpg' with your downloaded image file name -->
-                    <img src="Ayappan_img.jpg" alt="Fav God" class="polaroid-box-img">
-                    <span class="reveal-hint">(Click to reveal)</span>
-                </div>
-                <p>Fav God ♡</p>
-            </div>
+        <div class="signpost">
+            <div class="sign">MUMBAI</div>
+            <div class="sign">CHENNAI</div>
+            <div class="sign">CINEMA</div>
+            <div class="sign">CA</div>
+            <div class="sign">PEACE</div>
+        </div>
 
-            <div class="polaroid" onclick="openModal('Thiruchendur_img.jpg', 'Fav Temple — Thiruchendur ♡')">
-                <div class="polaroid-cover">
-                    <!-- Replace 'muruga_image.jpg' with your downloaded image file name -->
-                    <img src="Thiruchendur_img.jpg" alt="Fav Temple" class="polaroid-box-img">
-                    <span class="reveal-hint">(Click to reveal)</span>
+        <!-- FILM STRIP GALLERY (duplicated once for seamless loop) -->
+        <div class="filmstrip-wrap">
+            <div class="filmstrip-track" id="filmstripTrack">
+                <div class="polaroid" onclick="openModal('Ayappan_img.jpg', 'Fav God — Iyyappa ♡')" tabindex="0">
+                    <div class="polaroid-cover">
+                        <img src="Ayappan_img.jpg" alt="Fav God" class="polaroid-box-img">
+                        <span class="reveal-hint">Click to reveal</span>
+                    </div>
+                    <p>Fav God ♡</p>
                 </div>
-                <p>Fav Temple ♡</p>
-            </div>
 
-            <div class="polaroid" onclick="openModal('ilayaraja_image.jpg', 'Fav Music — Ilaiyaraaja ♡')">
-                <div class="polaroid-cover">
-                    <!-- Replace 'ilaiyaraaja_image.jpg' with your downloaded image file name -->
-                    <img src="ilayaraja.jpg" alt="Fav Music" class="polaroid-box-img">
-                    <span class="reveal-hint">(Click to reveal)</span>
+                <div class="polaroid" onclick="openModal('Thiruchendur_img.jpg', 'Fav Temple — Thiruchendur ♡')" tabindex="0">
+                    <div class="polaroid-cover">
+                        <img src="Thiruchendur_img.jpg" alt="Fav Temple" class="polaroid-box-img">
+                        <span class="reveal-hint">Click to reveal</span>
+                    </div>
+                    <p>Fav Temple ♡</p>
                 </div>
-                <p>Fav Music ♡</p>
-            </div>
 
-            <div class="polaroid" onclick="openModal('Vijay Sethupathi.jpg', 'Fav Hero — Vijay Sethupathi ♡')">
-                <div class="polaroid-cover">
-                    <!-- Replace 'super_deluxe_image.jpg' with your downloaded image file name -->
-                    <img src="Vijay Sethupathi.jpg" alt="Fav Hero" class="polaroid-box-img">
-                    <span class="reveal-hint">(Click to reveal)</span>
+                <div class="polaroid" onclick="openModal('ilayaraja_image.jpg', 'Fav Music — Ilaiyaraaja ♡')" tabindex="0">
+                    <div class="polaroid-cover">
+                        <img src="ilayaraja.jpg" alt="Fav Music" class="polaroid-box-img">
+                        <span class="reveal-hint">Click to reveal</span>
+                    </div>
+                    <p>Fav Music ♡</p>
                 </div>
-                <p>Fav Hero ♡</p>
-            </div>
 
-            <div class="polaroid" onclick="openModal('nayanthara_img.jpg', 'Fav Heroine — Nayanthara ♡')">
-                <div class="polaroid-cover">
-                    <img src="nayanthara_img.jpg" alt="Fav Heroine" class="polaroid-box-img">
-                    <span class="reveal-hint">(Click to reveal)</span>
+                <div class="polaroid" onclick="openModal('sethubathi_video.mp4', 'Fav Hero — Vijay Sethupathi ♡', 'video')" tabindex="0">
+                    <div class="polaroid-cover">
+                        <img src="Vijay Sethupathi.jpg" alt="Fav Hero" class="polaroid-box-img">
+                        <span class="reveal-hint">▶ Click to play</span>
+                    </div>
+                    <p>Fav Hero ♡</p>
                 </div>
-                <p>Fav Heroine ♡</p>
+
+                <div class="polaroid" onclick="openModal('nayanthara_img.jpg', 'Fav Heroine — Nayanthara ♡')" tabindex="0">
+                    <div class="polaroid-cover">
+                        <img src="nayanthara_img.jpg" alt="Fav Heroine" class="polaroid-box-img">
+                        <span class="reveal-hint">Click to reveal</span>
+                    </div>
+                    <p>Fav Heroine ♡</p>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- ACT TWO — HIS WORLD -->
     <section id="world" class="section-container">
+        <span class="chapter-tag">Reel Two</span>
         <h2 class="section-title">Things That Make Him… Him.</h2>
-        <p class="section-subtitle">Some people just live differently.</p>
-        
+        <p class="section-subtitle">Some people just live differently. Here's the cast of things that shaped him.</p>
+
         <div class="grid-cards">
-            <div class="cinematic-card">
+            <div class="poster-card">
                 <h3>🎓 The Dream</h3>
-                <p>"One day, the name won't just be Manikandan.<br>It will be CA Manikandan."</p>
+                <p>One day, the name won't just be Manikandan. It will be CA Manikandan — the title he's been rehearsing for years.</p>
             </div>
-            <div class="cinematic-card" style="background: #2a0800;">
+            <div class="poster-card">
                 <h3>🎬 Director — Someday</h3>
-                <p>"Somewhere between balance sheets and cinema... there's a filmmaker waiting."</p>
-                <p style="margin-top: 15px; color: var(--accent-gold);">Mysskin • Dharma Durai • Super Deluxe</p>
+                <p>Somewhere between balance sheets and cinema, there's a filmmaker waiting for his cue.</p>
+                <p class="credit-line">Mysskin • Dharma Durai • Super Deluxe</p>
             </div>
-            <div class="cinematic-card" style="background: #001f3f;">
+            <div class="poster-card">
                 <h3>🎵 The Soundtrack</h3>
-                <p>"Some people listen to songs.<br>Some people live inside them."</p>
-                <p style="margin-top: 15px; color: var(--accent-gold);">Ilaiyaraaja — on repeat.</p>
+                <p>Some people listen to songs. Some people live inside them, on repeat, on loop, forever.</p>
+                <p class="credit-line">Ilaiyaraaja, always.</p>
             </div>
         </div>
     </section>
 
+    <!-- ACT THREE — HIS PEOPLE -->
     <section id="people" class="section-container">
+        <span class="chapter-tag">Reel Three</span>
         <h2 class="section-title">His People</h2>
         <p class="section-subtitle">Behind every person is a few people who quietly become their whole world.</p>
 
-        <div class="people-card">
-            <h2>Amma ❤️</h2>
-            <p style="margin: 20px 0; font-style: italic;">"The anchor to all his dreams."</p>
-        </div>
+        <div class="people-grid">
+            <div class="people-card">
+                <h2>Amma ❤️</h2>
+                <p class="caption-line">"The anchor to all his dreams."</p>
+            </div>
 
-        <div class="people-card">
-            <h2>Sashtika 👧</h2>
-            <p style="margin: 20px 0; font-style: italic;">"Some bonds don't need an explanation.<br>One of the little pieces of his heart."</p>
-            <audio id="specialAudio" src="path_to_audio_file.mp3"></audio>
-            <button class="play-btn" onclick="playAudio()">▶ Play Her Voice / Ringtone</button>
+            <div class="people-card">
+                <h2>Sashtika 👧</h2>
+                <p class="caption-line">Some bonds don't need an explanation.</p>
+                <p>One of the little pieces of his heart.</p>
+                <audio id="specialAudio" src="path_to_audio_file.mp3"></audio>
+                <button class="play-btn" onclick="playAudio()">▶ Play Her Voice / Ringtone</button>
+            </div>
         </div>
     </section>
 
+    <!-- ACT FOUR — THE SCREEN TEST -->
     <section id="game" class="section-container">
-        <h2 class="section-title">How Well Do You Know Manikandan?</h2>
-        <p class="section-subtitle">Think you know him? Let's find out.</p>
+        <span class="chapter-tag">Reel Four</span>
+        <h2 class="section-title">The Screen Test</h2>
+        <p class="section-subtitle">Everyone claims to know the lead actor. Let's see how the score card actually reads.</p>
 
         <div class="quiz-container">
+            <div class="reel-progress" id="reelProgress"></div>
             <div id="quiz-content">
-                <h3 id="question-text" style="font-family: var(--font-body); margin-bottom: 20px;">What happens to his phone battery most often?</h3>
+                <h3 id="question-text">What happens to his phone battery most often?</h3>
                 <div class="options" id="options-container"></div>
             </div>
             <div id="quiz-result"></div>
         </div>
     </section>
 
-    <section id="future" class="section-container">
-        <h2 class="section-title">To The Man He Is Becoming.</h2>
-        <div class="timeline">
-            <div class="timeline-item">TODAY: CA Intermediate</div>
-            <div class="arrow-down">↓</div>
-            <div class="timeline-item">NEXT: CA Manikandan</div>
-            <div class="arrow-down">↓</div>
-            <div class="timeline-item">SOMEDAY: Auditor</div>
-            <div class="arrow-down">↓</div>
-            <div class="timeline-item" style="color: var(--accent-gold);">ONE DAY: 🎬 Director Manikandan</div>
+    <!-- ACT FIVE — THE PUZZLE -->
+    <section id="puzzle" class="section-container">
+        <span class="chapter-tag">Reel Five — Piece Him Together</span>
+        <h2 class="section-title">Solve The Scene.</h2>
+        <p class="section-subtitle">Every good story is a few scattered frames until someone puts them back in order. Slide the tiles until his picture comes together.</p>
+
+        <div class="puzzle-frame">
+            <div class="puzzle-grid" id="puzzleGrid"></div>
+            <div class="puzzle-meta">
+                <p class="puzzle-hint">Tap a tile next to the gap to slide it into place.</p>
+                <button class="play-btn" id="puzzleShuffle">Shuffle Again</button>
+                <p class="puzzle-status" id="puzzleStatus"></p>
+            </div>
         </div>
+    </section>
+
+    <!-- ACT SIX — HIS FUTURE -->
+    <section id="future" class="section-container">
+        <span class="chapter-tag">Reel Six — The Final Cut</span>
+        <h2 class="section-title">To The Man He Is Becoming.</h2>
+        <p class="section-subtitle">The credits haven't rolled yet. This part of the story is still being filmed.</p>
+
+        <div class="timeline-track" id="timelineTrack">
+            <div class="timeline-frame">
+                <span class="tag">Today</span>
+                <h4>CA Intermediate</h4>
+            </div>
+            <div class="timeline-frame">
+                <span class="tag">Next</span>
+                <h4>CA Manikandan</h4>
+            </div>
+            <div class="timeline-frame">
+                <span class="tag">Someday</span>
+                <h4>Auditor</h4>
+            </div>
+            <div class="timeline-frame final">
+                <span class="tag">One Day</span>
+                <h4>🎬 Director Manikandan</h4>
+            </div>
+        </div>
+
         <div class="final-wish">
-            <p class="typewriter-text">
-                Keep chasing the things that make you feel alive.<br>
-                Keep the people you love close.<br>
-                Keep listening to your music.<br>
-                Keep dreaming about that first film.<br><br>
-                And someday… we'll all be waiting for<br>
-                "A Film by CA Manikandan." 🎬
-            </p>
-            <h1 class="big-wish">Happy Birthday, Manikandan ❤️</h1>
+            <p class="typewriter-text" id="typewriterText"></p>
+            <h1 class="big-wish" id="bigWish">Happy Birthday, Manikandan ❤️</h1>
         </div>
     </section>
 
     <div id="imageModal" class="modal">
         <span class="close-modal" onclick="closeModal()">&times;</span>
         <img class="modal-content" id="modalImg">
+        <video class="modal-content" id="modalVideo" controls playsinline></video>
         <div id="modalCaption"></div>
     </div>
 
-    <!-- Make sure your JS file name matches what you have saved -->
+    <footer class="credit-footer">
+        <p>First move inspiration is from <span class="script-text" style="font-size: 1.15rem;">Abhiyum Naanum</span>.</p>
+    </footer>
+
     <script src="couple_unique.js"></script>
 </body>
 </html>
