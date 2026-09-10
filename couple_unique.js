@@ -52,7 +52,7 @@ function runOpeningSequence() {
         return;
     }
 
-    let count = 5;
+    let count = 20;
     const tick = setInterval(() => {
         count--;
         if (count > 0) {
@@ -68,7 +68,7 @@ function runOpeningSequence() {
                 setTimeout(() => intro.remove(), 650);
             }, 420);
         }
-    }, 380);
+    }, 500);
 }
 
 /* ---------- FILM STRIP: duplicate items for seamless loop ---------- */
@@ -78,14 +78,18 @@ function duplicateFilmstrip() {
     track.innerHTML += track.innerHTML;
 }
 
-/* ---------- AUDIO ---------- */
+/* ---------- AUDIO + PICTURE REVEAL ---------- */
 function playAudio() {
     const audio = document.getElementById('specialAudio');
-    if (audio.getAttribute('src') === 'path_to_audio_file.mp3') {
-        alert("Upload the ringtone/voice file and link it in the HTML audio tag to play!");
-    } else {
-        audio.play();
-    }
+
+    // Show her picture in the lightbox
+    openModal('puzzle_img.jpg', "Sashtika ♡", 'image');
+
+    // Play the voice/ringtone underneath
+    audio.currentTime = 0;
+    audio.play().catch(() => {
+        alert("Couldn't auto-play the audio — tap the picture again, or check that audio.mp4 is uploaded next to your HTML file.");
+    });
 }
 
 /* ---------- PUZZLE: slide the tiles to rebuild the picture ---------- */
@@ -321,14 +325,16 @@ function openModal(src, captionText, type = 'image') {
 
 function closeModal() {
     const modalVideo = document.getElementById("modalVideo");
+    const specialAudio = document.getElementById("specialAudio");
     modalVideo.pause();
+    if (specialAudio) specialAudio.pause();
     document.getElementById("imageModal").style.display = "none";
 }
 
 window.onclick = function (event) {
     const modal = document.getElementById("imageModal");
     if (event.target == modal) {
-        modal.style.display = "none";
+        closeModal();
     }
 };
 
