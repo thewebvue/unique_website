@@ -237,7 +237,7 @@ function playAudio() {
     const audio = document.getElementById('specialAudio');
 
     // Show her picture in the lightbox
-    openModal('puzzle_img.jpg', "Sashtika ♡", 'image');
+    openModal('photo_11.jpg', "Sashtika ♡", 'image');
 
     // Play the voice/ringtone underneath
     if (audio) {
