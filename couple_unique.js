@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTimelineReveal();
     initTypewriter();
     initNavToggle();
+    initGalleryCarousel();
 });
 
 /* ---------- MOBILE NAV TOGGLE ---------- */
@@ -35,6 +36,159 @@ function initNavToggle() {
     links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 }
 
+/* ---------- GALLERY: swipeable coverflow carousel ---------- */
+function initGalleryCarousel() {
+    const viewport = document.getElementById('carouselViewport');
+    const track = document.getElementById('carouselTrack');
+    const dotsWrap = document.getElementById('carouselDots');
+    const swipeHint = document.getElementById('swipeHint');
+    if (!viewport || !track) return;
+
+    const originalSlides = Array.from(track.children);
+    const total = originalSlides.length;
+    if (total === 0) return;
+
+    // Clone the last slide to the front, and the first slide to the back,
+    // so wrapping past either end is a seamless continuation (like the
+    // Fav filmstrip) instead of a visible jump back to the start.
+    const canLoop = total > 1;
+    if (canLoop) {
+        const firstClone = originalSlides[0].cloneNode(true);
+        const lastClone = originalSlides[total - 1].cloneNode(true);
+        firstClone.setAttribute('aria-hidden', 'true');
+        lastClone.setAttribute('aria-hidden', 'true');
+        track.insertBefore(lastClone, originalSlides[0]);
+        track.appendChild(firstClone);
+    }
+
+    const allSlides = Array.from(track.children);
+    let trackIndex = canLoop ? 1 : 0; // position within allSlides that is on screen
+    let autoplayTimer = null;
+    let hintDismissed = false;
+
+    // Build dots — one per REAL photo, not per clone
+    const dots = [];
+    originalSlides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.classList.add('dot');
+        dot.setAttribute('aria-label', `Go to photo ${i + 1}`);
+        dot.addEventListener('click', () => {
+            trackIndex = canLoop ? i + 1 : i;
+            update();
+            restartAutoplay();
+            dismissHint();
+        });
+        dotsWrap.appendChild(dot);
+        dots.push(dot);
+    });
+
+    function dismissHint() {
+        if (hintDismissed || !swipeHint) return;
+        hintDismissed = true;
+        swipeHint.classList.add('dismissed');
+    }
+
+    function realIndex() {
+        if (!canLoop) return trackIndex;
+        return ((trackIndex - 1) + total) % total;
+    }
+
+    function slideWidth() {
+        return viewport.clientWidth;
+    }
+
+    function update(withTransition = true) {
+        if (!withTransition) track.style.transition = 'none';
+        track.style.transform = `translateX(${-trackIndex * slideWidth()}px)`;
+        if (!withTransition) {
+            void track.offsetHeight; // force reflow before re-enabling transition
+            track.style.transition = '';
+        }
+        allSlides.forEach((slide, i) => slide.classList.toggle('active', i === trackIndex));
+        const ri = realIndex();
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === ri));
+    }
+
+    function next() { trackIndex++; update(); }
+    function prev() { trackIndex--; update(); }
+
+    // When a transition into a cloned slide finishes, silently snap to the
+    // matching real slide with no animation — the clone looks identical,
+    // so the loop feels continuous instead of ending.
+    track.addEventListener('transitionend', (e) => {
+        if (e.propertyName !== 'transform' || !canLoop) return;
+        if (trackIndex === allSlides.length - 1) {
+            trackIndex = 1;
+            update(false);
+        } else if (trackIndex === 0) {
+            trackIndex = total;
+            update(false);
+        }
+    });
+
+    // Keyboard navigation when the carousel is focused
+    viewport.setAttribute('tabindex', '0');
+    viewport.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { next(); restartAutoplay(); dismissHint(); }
+        if (e.key === 'ArrowLeft') { prev(); restartAutoplay(); dismissHint(); }
+    });
+
+    // Swipe / drag support (touch + mouse via Pointer Events).
+    // A drag ever only advances exactly one photo, however far you pull.
+    let isDragging = false;
+    let startX = 0;
+    let currentTranslate = 0;
+
+    viewport.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        currentTranslate = 0;
+        track.style.transition = 'none';
+        viewport.setPointerCapture(e.pointerId);
+        stopAutoplay();
+        dismissHint();
+    });
+
+    viewport.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        currentTranslate = e.clientX - startX;
+        const base = -trackIndex * slideWidth();
+        track.style.transform = `translateX(${base + currentTranslate}px)`;
+    });
+
+    function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+        track.style.transition = '';
+        const threshold = 50;
+        if (currentTranslate < -threshold) next();
+        else if (currentTranslate > threshold) prev();
+        else update();
+        currentTranslate = 0;
+        restartAutoplay();
+    }
+    viewport.addEventListener('pointerup', endDrag);
+    viewport.addEventListener('pointercancel', endDrag);
+    viewport.addEventListener('pointerleave', () => { if (isDragging) endDrag(); });
+
+    // Gentle autoplay that yields to the user on any interaction
+    function startAutoplay() {
+        if (!canLoop) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        autoplayTimer = setInterval(next, 4500);
+    }
+    function stopAutoplay() { clearInterval(autoplayTimer); }
+    function restartAutoplay() { stopAutoplay(); startAutoplay(); }
+
+    viewport.addEventListener('mouseenter', stopAutoplay);
+    viewport.addEventListener('mouseleave', restartAutoplay);
+
+    window.addEventListener('resize', () => update(false));
+
+    update(false);
+    startAutoplay();
+}
+
 /* ---------- OPENING SEQUENCE ---------- */
 function runOpeningSequence() {
     const intro = document.getElementById('openingIntro');
@@ -52,7 +206,7 @@ function runOpeningSequence() {
         return;
     }
 
-    let count = 20;
+    let count = 5;
     const tick = setInterval(() => {
         count--;
         if (count > 0) {
@@ -61,7 +215,7 @@ function runOpeningSequence() {
             clearInterval(tick);
             countEl.textContent = '';
             intro.classList.add('clap');
-            flash.classList.add('flash');
+            if(flash) flash.classList.add('flash');
             setTimeout(() => {
                 intro.classList.add('hide');
                 document.body.style.overflow = '';
@@ -86,10 +240,12 @@ function playAudio() {
     openModal('puzzle_img.jpg', "Sashtika ♡", 'image');
 
     // Play the voice/ringtone underneath
-    audio.currentTime = 0;
-    audio.play().catch(() => {
-        alert("Couldn't auto-play the audio — tap the picture again, or check that audio.mp4 is uploaded next to your HTML file.");
-    });
+    if (audio) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {
+            alert("Couldn't auto-play the audio — tap the picture again, or check that audio.mp4 is uploaded next to your HTML file.");
+        });
+    }
 }
 
 /* ---------- PUZZLE: slide the tiles to rebuild the picture ---------- */
@@ -112,14 +268,13 @@ function initPuzzle() {
             puzzleState = Array.from({ length: PUZZLE_DIM * PUZZLE_DIM }, (_, i) => i);
             shufflePuzzle();
             renderPuzzle();
-            puzzleStatusEl.textContent = '';
+            if(puzzleStatusEl) puzzleStatusEl.textContent = '';
             puzzleGridEl.classList.remove('solved');
         });
     }
 }
 
 function shufflePuzzle() {
-    // perform random legal slides from the solved state so it always stays solvable
     const blankValue = PUZZLE_DIM * PUZZLE_DIM - 1;
     for (let m = 0; m < 150; m++) {
         const blankIndex = puzzleState.indexOf(blankValue);
@@ -174,7 +329,7 @@ function handleTileClick(index) {
 
     if (isPuzzleSolved()) {
         puzzleGridEl.classList.add('solved');
-        puzzleStatusEl.textContent = "Picture's clear now. Just like this scene. ❤️";
+        if(puzzleStatusEl) puzzleStatusEl.textContent = "Picture's clear now. Just like this scene. ❤️";
     }
 }
 
@@ -225,6 +380,7 @@ function initQuiz() {
 }
 
 function buildReelDots() {
+    if(!reelProgress) return;
     reelProgress.innerHTML = "";
     questions.forEach(() => {
         const dot = document.createElement("span");
@@ -234,6 +390,7 @@ function buildReelDots() {
 }
 
 function updateReelDots() {
+    if(!reelProgress) return;
     const dots = reelProgress.querySelectorAll(".reel-dot");
     dots.forEach((dot, i) => {
         dot.classList.toggle("done", i < currentQuestionIndex);
@@ -285,15 +442,16 @@ function checkAnswer(selectedIndex, btn) {
 }
 
 function showResult() {
-    quizContent.style.display = "none";
-    quizResult.style.display = "block";
+    if(quizContent) quizContent.style.display = "none";
+    if(quizResult) {
+        quizResult.style.display = "block";
+        const scoreLine = `<span class="score-line">Score: ${score}/${questions.length}</span>`;
 
-    const scoreLine = `<span class="score-line">Score: ${score}/${questions.length}</span>`;
-
-    if (score > 2) {
-        quizResult.innerHTML = "Okay… you actually know Manikandan. ❤️" + scoreLine;
-    } else {
-        quizResult.innerHTML = "Bro… you clearly need to spend more time with him. 😂" + scoreLine;
+        if (score > 2) {
+            quizResult.innerHTML = "Okay… you actually know Manikandan. ❤️" + scoreLine;
+        } else {
+            quizResult.innerHTML = "Bro… you clearly need to spend more time with him. 😂" + scoreLine;
+        }
     }
 }
 
@@ -304,31 +462,40 @@ function openModal(src, captionText, type = 'image') {
     const modalVideo = document.getElementById("modalVideo");
     const caption = document.getElementById("modalCaption");
 
+    if(!modal) return;
     modal.style.display = "block";
-    caption.innerHTML = captionText;
+    if(caption) caption.innerHTML = captionText;
 
     if (type === 'video') {
-        modalImg.style.display = "none";
-        modalImg.src = "";
-        modalVideo.style.display = "block";
-        modalVideo.src = src;
-        modalVideo.currentTime = 0;
-        modalVideo.play().catch(() => { /* autoplay may be blocked; user can press play */ });
+        if(modalImg) modalImg.style.display = "none";
+        if(modalImg) modalImg.src = "";
+        if(modalVideo) {
+            modalVideo.style.display = "block";
+            modalVideo.src = src;
+            modalVideo.currentTime = 0;
+            modalVideo.play().catch(() => {});
+        }
     } else {
-        modalVideo.pause();
-        modalVideo.style.display = "none";
-        modalVideo.src = "";
-        modalImg.style.display = "block";
-        modalImg.src = src;
+        if(modalVideo) {
+            modalVideo.pause();
+            modalVideo.style.display = "none";
+            modalVideo.src = "";
+        }
+        if(modalImg) {
+            modalImg.style.display = "block";
+            modalImg.src = src;
+        }
     }
 }
 
 function closeModal() {
+    const modal = document.getElementById("imageModal");
     const modalVideo = document.getElementById("modalVideo");
     const specialAudio = document.getElementById("specialAudio");
-    modalVideo.pause();
+    
+    if (modalVideo) modalVideo.pause();
     if (specialAudio) specialAudio.pause();
-    document.getElementById("imageModal").style.display = "none";
+    if (modal) modal.style.display = "none";
 }
 
 window.onclick = function (event) {
@@ -375,14 +542,53 @@ function initTypewriter() {
     if (!el) return;
 
     const lines = [
-        "Keep chasing the things that make you feel alive.",
-        "Keep the people you love close.",
-        "Keep listening to your music.",
-        "Keep dreaming about that first film.",
+        "En CA… En Director… En Forever ❤️",
+        "Accounts-la numbers-a thedi,",
+        "Life-la dreams-a thedi,",
+        "Oru pakkam CA aaga pora nee…",
+        "Innor pakkam Cinema-va direct panna pora nee…",
         "",
-        "And someday… we'll all be waiting for",
-        "\u201cA Film by CA Manikandan.\u201d 🎬"
+        "Books un kaiyila irundhaalum,",
+        "Un manasula eppovume oru screenplay odudhu…",
+        "Balance sheet-la profit & loss paakra nee,",
+        "Aana en life-la vandhu",
+        "Profit mattum kudutha manushan nee. ❤️",
+        "",
+        "CA exam-ku padikkira ovvoru iravum,",
+        "Un kanavukkaaga nee podra ovvoru muyarchiyum,",
+        "Oru naal…",
+        "“Action!” nu nee sollumbodhu",
+        "Andha screen-la theriyum…",
+        "Nee kadandhu vandha paadhai ellam. 🎬",
+        "",
+        "Innaiku birthday…",
+        "Aana idhu just oru birthday illa…",
+        "Un dreams rendu perum",
+        "Orey naal-la celebrate panna vendiya beginning.",
+        "",
+        "Oru naal naan proud-a sollanum…",
+        "",
+        "“Avan en CA mattum illa…",
+        "Avan oru Director.",
+        "Avan en Director mattum illa…",
+        "Avan dhaan en Forever.” ❤️",
+        "",
+        "Un calculations ellam success-a balance aaganum…",
+        "Un stories ellam blockbuster-a aaganum…",
+        "Un dreams ellam reality-a maaranum…",
+        "",
+        "And most importantly…",
+        "",
+        "Un life oda beautiful-aana",
+        "every frame-la…",
+        "Naanum irukkanum. ❤️🎬",
+        "",
+        "Happy Birthday, En CA…",
+        "My Director…",
+        "My Dreamer…",
+        "My Forever. 🫶🏻"
     ];
+    
     const fullText = lines.join('\n');
     let started = false;
 
