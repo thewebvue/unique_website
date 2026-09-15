@@ -206,7 +206,7 @@ function runOpeningSequence() {
         return;
     }
 
-    let count = 5;
+    let count = 15;
     const tick = setInterval(() => {
         count--;
         if (count > 0) {
@@ -237,7 +237,7 @@ function playAudio() {
     const audio = document.getElementById('specialAudio');
 
     // Show her picture in the lightbox
-    openModal('photo_11.jpg', "Sashtika ♡", 'image');
+    openModal('shashika_img.jpeg', "Sashtika ♡", 'image');
 
     // Play the voice/ringtone underneath
     if (audio) {
