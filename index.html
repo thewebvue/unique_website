@@ -229,15 +229,24 @@
             <div class="people-card">
                 <h2>Amma ❤️</h2>
                 <p class="caption-line">"The anchor to all his dreams."</p>
+                <!-- Added button to open Amma's picture -->
+                <button class="play-btn" onclick="openModal('amma_pic.jpeg', 'Amma ❤️')">▶ Click to view picture</button>
             </div>
 
             <div class="people-card">
                 <h2>Sashtika 👧</h2>
                 <p class="caption-line">Some bonds don't need an explanation.</p>
                 <p>One of the little pieces of his heart.</p>
-                <!-- Put audio.mp4 and puzzle_img (e.g. puzzle_img.jpg) in the SAME folder as this HTML file -->
+                <!-- Put audio.mp3 and puzzle_img.jpg in the SAME folder as this HTML file -->
                 <audio id="specialAudio" src="audio.mp3"></audio>
                 <button class="play-btn" onclick="playAudio()">▶ Play Her Voice / Ringtone</button>
+            </div>
+            
+            <!-- Added Third Card for his favorite song -->
+            <div class="people-card">
+                <h2>His fav song 🎵</h2>
+                <p class="caption-line">The track on repeat.</p>
+                <button class="play-btn" onclick="openModal('add_song.mp4', 'His Fav Song', 'video')">▶ Listen to song</button>
             </div>
         </div>
     </section>
