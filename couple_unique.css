@@ -463,7 +463,7 @@ nav {
     border: 1px solid rgba(201,154,63,0.35);
 }
 .puzzle-tile {
-    background-image: url('puzzle_img.jpg');
+    background-image: url('shashika_img.jpeg');
     background-size: 300% 300%;
     border-radius: 2px;
     cursor: pointer;
@@ -484,6 +484,95 @@ nav {
     font-size: 1.4rem;
     color: var(--maroon);
     min-height: 1.4em;
+}
+
+/* ---------- ACT TWO: GALLERY CAROUSEL ---------- */
+#gallery { background-color: var(--paper-warm); overflow: hidden; }
+
+.reel-carousel {
+    position: relative;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.carousel-viewport {
+    overflow: hidden;
+    padding: 20px 0 40px;
+    cursor: grab;
+    touch-action: pan-y;
+}
+.carousel-viewport:active { cursor: grabbing; }
+
+.carousel-track {
+    display: flex;
+    will-change: transform;
+    transition: transform 0.45s cubic-bezier(.22,.9,.32,1);
+}
+
+.carousel-slide {
+    flex: 0 0 100%;
+    max-width: 100%;
+    background: var(--ink);
+    border-radius: 6px;
+    padding: 10px 10px 28px;
+    box-shadow: 0 20px 45px rgba(21,19,15,0.22);
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.carousel-slide img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    height: auto;
+    object-fit: cover;
+    border-radius: 3px;
+    pointer-events: none;
+    display: block;
+}
+
+.slide-caption {
+    text-align: center;
+    font-family: var(--font-script);
+    color: var(--gold-bright);
+    font-size: 1.25rem;
+    margin-top: 12px;
+}
+
+/* ---------- SWIPE HINT ---------- */
+.swipe-hint {
+    text-align: center;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    color: var(--maroon);
+    opacity: 0.75;
+    margin-bottom: 18px;
+    animation: swipeNudge 2.2s ease-in-out infinite;
+    transition: opacity 0.4s ease;
+}
+.swipe-hint.dismissed { opacity: 0; }
+@keyframes swipeNudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(8px); }
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+}
+.carousel-dots .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(21,19,15,0.2);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+.carousel-dots .dot.active { background: var(--maroon); transform: scale(1.25); }
+
+@media (prefers-reduced-motion: reduce) {
+    .swipe-hint { animation: none; }
 }
 
 /* ---------- ACT THREE: HIS WORLD ---------- */
